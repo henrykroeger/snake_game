@@ -53,6 +53,21 @@ end
 assign game_clk = div_clk[32] // TODO: Check this timing!
 
 // TODO: Button debouncing
+ee201_debouncer #(.N_dc(25)) ee201_debouncer_1 
+        (.CLK(sys_clk), .RESET(Reset), .PB(BtnL), .DPB( ), .SCEN(BtnL_SCEN), .MCEN( ), .CCEN( ));
+ee201_debouncer #(.N_dc(25)) ee201_debouncer_2 
+        (.CLK(sys_clk), .RESET(Reset), .PB(BtnR), .DPB( ), .SCEN(BtnR_SCEN), .MCEN( ), .CCEN( ));
+ee201_debouncer #(.N_dc(25)) ee201_debouncer_3 
+        (.CLK(sys_clk), .RESET(Reset), .PB(BtnU), .DPB( ), .SCEN(BtnU_SCEN), .MCEN( ), .CCEN( ));
+ee201_debouncer #(.N_dc(25)) ee201_debouncer_4 
+        (.CLK(sys_clk), .RESET(Reset), .PB(BtnD), .DPB( ), .SCEN(BtnD_SCEN), .MCEN( ), .CCEN( ));
+ee201_debouncer #(.N_dc(25)) ee201_debouncer_5 
+        (.CLK(sys_clk), .RESET(Reset), .PB(BtnC), .DPB( ), .SCEN(Start_Ack_SCEN), .MCEN( ), .CCEN( ));
+// Use SCEN in determining next_dir (do this in top or core?)
+
+// TODO: Instantiation of core
+snake_core snake_core1 (0, .SCEN(Start_Ack_SCEN), .Reset(Reset), .CLK(sys_clk), .Qi(Qi), .Qm(Qm), .Qc(Qc), .Qh(Qh), .Qe(Qe), 
+					.Qw(Qw), .Ql(Ql), .Qu(Qu), .Food(Food), .Length(Length), .Locations(Locations)));
 
 // TODO: LED asignments
 assign {Ld7, Ld6, Ld5, Ld4} = {Qi, Qm, Qc, Qh};
