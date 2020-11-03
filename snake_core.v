@@ -44,7 +44,7 @@ localparam
 	DOWN = 2'b11;
 
 
-always @(posedge Clk, posedge Reset) // asynchronous high-active reset
+always @(posedge Clk, Reset) // asynchronous high-active reset
 begin
 	if (Reset) begin
 		state <= INIT;
