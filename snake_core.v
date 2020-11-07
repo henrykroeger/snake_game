@@ -6,7 +6,7 @@
  * 
  * Core state machine for the snake game.
  */
-module snake_core (Next_Dir, Ack, Reset, Clk, Qi, Qm, Qc, Qh, Qe, 
+module snake_core (Left, Right, Up, Down, Ack, Reset, Clk, Qi, Qm, Qc, Qh, Qe, 
 					Qw, Ql, Qu, Food, Length, Locations);
 
 input [1:0] Next_Dir;
