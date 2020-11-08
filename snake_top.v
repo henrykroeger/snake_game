@@ -7,7 +7,11 @@
  * Core state machine for the snake game.
  */
 
-module snake_top (// TODO)
+module snake_top (MemOE, MemWR, RamCS, QuadSpiFlashCS,
+				ClkPort, BtnL, BtnR, BtnU, BtnD, Sw0,
+				Ld7, Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0,
+				An7, An6, An5, An4, An3, An2, An1, An0,
+				hSync, vSync, vgaR, vgaG, vgaB);
 
 // Inputs
 input ClkPort;
@@ -15,10 +19,15 @@ input BtnL, BtnR, BtnU, BtnD, BtnC;
 input Sw0;
 
 // Outputs
+
+output 	MemOE, MemWR, RamCS, QuadSpiFlashCS;
+
 output Ld7, Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0;
 output Dp, Cg, Cf, Ce, Cd, Cc, Cb, Ca;
 output An7, An6, An5, An4, An3, An2, An1, An0;
 // TODO: VGA OUTPUT & VGA CLOCK TIMING
+output hSync. vSync;
+output [3:0] vgaR, vgaG, vgaB;
 
 // Clock Signals
 wire ClkPort;
@@ -28,7 +37,9 @@ reg [32:0] div_clk;
 
 // Other
 wire reset;
-output Qi, Qm, Qc, Qh, Qe, Qw, Ql, Qu;
+wire Qi, Qm, Qc, Qh, Qe, Qw, Ql, Qu;
+reg [15:0] locations [7:0];
+reg [7:0] food;
 reg [3:0] length;
 
 // SSD
@@ -37,6 +48,8 @@ wire [7:0] ssd1, ssd0;
 
 
 assign reset = Sw0;
+
+assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;
 
 // Clock Division
 BUFGP BUFGP1 (board_clk, ClkPort);
@@ -50,24 +63,28 @@ begin
 	end
 end
 
-assign game_clk = div_clk[32] // TODO: Check this timing!
+assign game_clk = div_clk[26]; // TODO: Check this timing!
+assign vga_clk = div_clk[19];
 
 // TODO: Button debouncing
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_1 
-        (.CLK(sys_clk), .RESET(Reset), .PB(BtnL), .DPB( ), .SCEN(BtnL_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(Reset), .PB(BtnL), .DPB( ), .SCEN(BtnL_SCEN), .MCEN( ), .CCEN( ));
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_2 
-        (.CLK(sys_clk), .RESET(Reset), .PB(BtnR), .DPB( ), .SCEN(BtnR_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(Reset), .PB(BtnR), .DPB( ), .SCEN(BtnR_SCEN), .MCEN( ), .CCEN( ));
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_3 
-        (.CLK(sys_clk), .RESET(Reset), .PB(BtnU), .DPB( ), .SCEN(BtnU_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(Reset), .PB(BtnU), .DPB( ), .SCEN(BtnU_SCEN), .MCEN( ), .CCEN( ));
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_4 
-        (.CLK(sys_clk), .RESET(Reset), .PB(BtnD), .DPB( ), .SCEN(BtnD_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(Reset), .PB(BtnD), .DPB( ), .SCEN(BtnD_SCEN), .MCEN( ), .CCEN( ));
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_5 
-        (.CLK(sys_clk), .RESET(Reset), .PB(BtnC), .DPB( ), .SCEN(Start_Ack_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(Reset), .PB(BtnC), .DPB( ), .SCEN(Start_Ack_SCEN), .MCEN( ), .CCEN( ));
 // Use SCEN in determining next_dir (do this in top or core?)
 
-// TODO: Instantiation of core
-snake_core snake_core1 (0, .SCEN(Start_Ack_SCEN), .Reset(Reset), .CLK(sys_clk), .Qi(Qi), .Qm(Qm), .Qc(Qc), .Qh(Qh), .Qe(Qe), 
-					.Qw(Qw), .Ql(Ql), .Qu(Qu), .Food(Food), .Length(Length), .Locations(Locations)));
+snake_core snake_core1 (.Left(BtnL_SCEN), .Right(BtnR_SCEN), .Up(BtnU_SCEN), .Down(BtnD_SCEN), .Ack(Start_Ack_SCEN), .Reset(reset), .CLK(game_clk), .Qi(Qi), .Qm(Qm), .Qc(Qc), .Qh(Qh), .Qe(Qe), 
+					.Qw(Qw), .Ql(Ql), .Qu(Qu), .Food(food), .Length(length), .Locations(locations)));
+
+display_controller dc(.clk(board_clk), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
+block_controller sc(.clk(vga_clk), .bright(bright), .rst(BtnC), .up(BtnU), .down(BtnD),.left(BtnL),.right(BtnR),.hCount(hc), .vCount(vc), .rgb(rgb), .background(background));
+	
 
 // TODO: LED asignments
 assign {Ld7, Ld6, Ld5, Ld4} = {Qi, Qm, Qc, Qh};
@@ -109,6 +126,6 @@ always @ (ssd_clk, ssd1, ssd0)
 begin
 	case (ssd_clk) 
 		1'b1: ssd = ssd1;
-		1'b1: ssd = ssd0;
+		1'b0: ssd = ssd0;
 	endcase 
 end
