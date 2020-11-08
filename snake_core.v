@@ -17,7 +17,7 @@ output [7:0] Food;
 output [3:0] Length;
 output [127:0] Locations_Flat; // 16 locations
 
-
+reg [7:0] rand_loc;
 
 reg [7:0] Food;
 reg [3:0] Length;
@@ -30,6 +30,7 @@ assign locations_Flat = {locations[0], locations[1], locations[2], locations[3],
 
 reg [7:0] state;
 reg [1:0] next_dir;
+wire [1:0] dir;
 
 integer i, j;
 
@@ -54,7 +55,7 @@ localparam
 	DOWN = 2'b11;
 
 // TODO: I have no idea if this is right...
-always @(posedge Clk, posedge Left, posedge Right, posedge Up, posedge Down)
+always @(posedge Left, posedge Right, posedge Up, posedge Down)
 begin
 	if (Left) begin
 		next_dir <= LEFT;
@@ -68,6 +69,13 @@ begin
 	else if (Down) begin
 		next_dir <= DOWN;
 	end
+end
+
+// Pseudorandom food location generator
+always @(posedge Clk)
+begin
+	// Do not need known initial state
+	rand_loc <= rand_loc + 1;
 end
 
 always @(posedge Clk, posedge Reset) // asynchronous high-active reset
@@ -157,9 +165,9 @@ begin
 			begin
 				state <= MOVE;
 				Length <= Length + 1;
-				Food <= $urandom % 255;
+				Food <= rand_loc;
 				// potential bug...food could generate under snake
-				if (Length == 14) begin
+				if (Length == 15) begin
 					state <= WIN;
 				end
 			end
