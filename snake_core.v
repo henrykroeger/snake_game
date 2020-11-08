@@ -23,11 +23,10 @@ reg [7:0] Food;
 reg [3:0] Length;
 reg [7:0] locations [15:0];
 
-assign locations_flat = {locations[0], locations[1], locations[2], locations[3],
+assign locations_Flat = {locations[0], locations[1], locations[2], locations[3],
 						locations[4], locations[5], locations[6], locations[7],
 						locations[8], locations[9], locations[10], locations[11],
 						locations[12], locations[13], locations[14], locations[15]};
-
 
 reg [7:0] state;
 reg [1:0] next_dir;
@@ -83,6 +82,22 @@ begin
 			begin
 				locations[0] <= 125;
 				locations[1] <= 124;
+				// Send rest of locations into known initial state
+				locations[2] <= 8'b00000000;
+				locations[3] <= 8'b00000000;
+				locations[4] <= 8'b00000000;
+				locations[5] <= 8'b00000000;
+				locations[6] <= 8'b00000000;
+				locations[7] <= 8'b00000000;
+				locations[8] <= 8'b00000000;
+				locations[9] <= 8'b00000000;
+				locations[10] <= 8'b00000000;
+				locations[11] <= 8'b00000000;
+				locations[12] <= 8'b00000000;
+				locations[13] <= 8'b00000000;
+				locations[14] <= 8'b00000000;
+				locations[15] <= 8'b00000000;
+				
 				next_dir <= RIGHT;
 				Length <= 1;
 				if (Ack) begin
@@ -92,8 +107,11 @@ begin
 
 			MOVE: // update the byte array of positions
 			begin
-				for (i = Length - 1; i >= 0; i = i - 1) begin
-					locations[i + 1] <= locations[i];
+				for (i = 14; i >= 0; i = i - 1) begin
+					if ((i <= Length - 1) && (i >= 0))
+					begin
+					   locations[i + 1] <= locations[i];
+					end
 				end
 
 				if (next_dir == LEFT) begin
@@ -139,7 +157,7 @@ begin
 			begin
 				state <= MOVE;
 				Length <= Length + 1;
-				Food <= $urandom_range(255);
+				Food <= $urandom % 255;
 				// potential bug...food could generate under snake
 				if (Length == 14) begin
 					state <= WIN;
