@@ -7,7 +7,7 @@
  * Core state machine for the snake game.
  */
 module snake_core (Left, Right, Up, Down, Ack, Reset, Clk, Qi, Qm, Qc, Qh, Qe, 
-					Qw, Ql, Qu, Food, Length, Locations);
+					Qw, Ql, Qu, Food, Length, Locations_Flat);
 
 input Left, Right, Up, Down;
 input Ack, Reset, Clk;
@@ -15,14 +15,24 @@ input Ack, Reset, Clk;
 output Qi, Qm, Qc, Qh, Qe, Qw, Ql, Qu;
 output [7:0] Food;
 output [3:0] Length;
-output [15:0] Locations [7:0]; // 16 locations
+output [127:0] Locations_Flat; // 16 locations
+
+
 
 reg [7:0] Food;
 reg [3:0] Length;
-reg [15:0] Locations [7:0];
+reg [15:0] locations [7:0];
+
+assign locations_flat = {locations[0], locations[1], locations[2], locations[3],
+						locations[4], locations[5], locations[6], locations[7],
+						locations[8], locations[9], locations[10], locations[11],
+						locations[12], locations[13], locations[14], locations[15]};
+
 
 reg [7:0] state;
-wire [1:0] next_dir;
+reg [1:0] next_dir;
+
+integer i, j;
 
 // one-hot state machine
 localparam
@@ -71,8 +81,8 @@ begin
 		case (state)
 			INIT: // when ack is received, start moving
 			begin
-				Locations[0] <= 125;
-				Locations[1] <= 124;
+				locations[0] <= 125;
+				locations[1] <= 124;
 				next_dir <= RIGHT;
 				Length <= 1;
 				if (Ack) begin
@@ -83,23 +93,23 @@ begin
 			MOVE: // update the byte array of positions
 			begin
 				for (i = Length - 1; i >= 0; i = i + 1) begin
-					Locations[i + 1] <= Locations[i];
+					locations[i + 1] <= locations[i];
 				end
 
 				if (next_dir == LEFT) begin
-					Locations[0] <= Locations[0] - 1;
+					locations[0] <= locations[0] - 1;
 				end
 
 				else if (next_dir == RIGHT) begin
-					Locations[0] <= Locations[0] + 1;
+					locations[0] <= locations[0] + 1;
 				end
 
 				else if (next_dir == UP) begin
-					Locations[0] <= Locations[0] - 16;
+					locations[0] <= locations[0] - 16;
 				end
 
 				else if (next_dir == DOWN) begin
-					Locations[0] <= Locations[0] + 16;
+					locations[0] <= locations[0] + 16;
 				end
 
 				state <= CHECK;
@@ -107,7 +117,7 @@ begin
 
 			CHECK: // check if we grow or if we lost
 			begin
-				if (Locations[0] == Food) begin
+				if (locations[0] == Food) begin
 					state <= EAT;
 				end
 
@@ -117,7 +127,7 @@ begin
 					state <= HOLD;
 					for (i = 0; i < Length; i = i + 1) begin
 						for (j = i; j < Length; j = j + 1) begin
-							if (Locations[i] == Locations[j]) begin
+							if (locations[i] == locations[j]) begin
 								state <= LOSE;
 							end
 						end
