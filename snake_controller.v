@@ -4,16 +4,22 @@ module snake_controller(
 	input Clk, //this clock must be a slow enough clock to view the changing positions of the objects
 	input Bright,
 	input Reset,
-	input Qw, Ql,
+	input Qw, Ql, Qc,
 	input [9:0] hCount, vCount,
 	input [7:0] Food,
 	input [3:0] Length,
-	input [15:0] Locations [7:0],
+	input [127:0] Locations_Flat,
 	output reg [11:0] rgb,
 	output reg [11:0] background
    );
 	wire snake_fill;
 	wire food_fill;
+	wire [15:0] locations [7:0];
+
+	assign {locations[0], locations[1], locations[2], locations[3],
+			locations[4], locations[5], locations[6], locations[7],
+			locations[8], locations[9], locations[10], locations[11],
+			locations[12], locations[13], locations[14], locations[15]} = Locations_Flat;
 	
 	//these two values dictate the center of each block of the snake
 	reg [15:0] xpos [9:0]; 
@@ -27,7 +33,7 @@ module snake_controller(
 	/*when outputting the rgb value in an always block like this, make sure to include the if(~bright) statement, as this ensures the monitor 
 	will output some data to every pixel and not just the images you are trying to display*/
 	always@ (*) begin
-    	if(~bright )	//force black if not inside the display area
+    	if(~Bright )	//force black if not inside the display area
 			rgb = 12'b0000_0000_0000;
 		else if (snake_fill) 
 			rgb = YELLOW; 
@@ -38,16 +44,17 @@ module snake_controller(
 	end
 
 	// Calculate snake positions, top left corner (144, 35)
-	always@ (posedge clk) begin
-	int i;
-	for (i = 0; i < Length; i++)
+	integer i;
+	always@ (posedge Clk) begin
+	for (i = 0; i < Length; i = i + 1)
 		begin
-			xpos[i] <= (Locations[i] % 16)*30 + 144 + 15;
-			ypos[i] <= (Locations[i] / 16)*30 + 35 + 15;
+			xpos[i] <= (locations[i] % 16)*30 + 144 + 15;
+			ypos[i] <= (locations[i] / 16)*30 + 35 + 15;
 		end
-	if (Qc)
-		f_xpos <= (Locations[i] % 16)*30 + 144 + 15;
-		f_ypos <= (Locations[i] / 16)*30 + 35 + 15;
+	if (Qc) begin
+		f_xpos <= (locations[i] % 16)*30 + 144 + 15;
+		f_ypos <= (locations[i] / 16)*30 + 35 + 15;
+	end
 	end
 
 	/* Note that the top left of the screen does NOT correlate to vCount=0 and hCount=0. The display_controller.v file has the 
@@ -58,8 +65,8 @@ module snake_controller(
 		*/
 	
 	//the +-15 for the positions give the dimension of the block (i.e. it will be 30x30 pixels)
-	int j;
-	for (j = 0; j < Length; j++)
+	integer j;
+	for (j = 0; j < Length; j = j + 1)
 		begin
 			assign snake_fill = vCount>=(ypos[j]-15) && vCount<=(ypos[j]+15) && hCount>=(xpos[j]-15) && hCount<=(xpos[j]+15);
 		end
@@ -68,8 +75,8 @@ module snake_controller(
 	
 	
 	//the background color reflects the state of the game
-	always@(posedge clk, posedge rst) begin
-		if(rst)
+	always@(posedge Clk, posedge Reset) begin
+		if(Reset)
 			background <= 12'b0000_0000_0000;
 		else 
 			if(Ql) // Turn red if lose
