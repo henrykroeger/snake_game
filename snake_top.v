@@ -56,7 +56,7 @@ assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;
 
 // Clock Division
 BUFGP BUFGP1 (board_clk, ClkPort);
-always @(posedge board_clk, reset)
+always @(posedge board_clk, posedge reset)
 begin
 	if (reset) begin
 		div_clk <= 0;
@@ -98,7 +98,7 @@ assign ssd_clk = div_clk[18];
 
 assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp} = {ssd};
 
-integer conv;
+/*integer conv;
 always @( length )
 begin
 	conv = length;
@@ -132,5 +132,5 @@ begin
 		1'b1: ssd = ssd1;
 		1'b0: ssd = ssd0;
 	endcase 
-end
+end*/
 endmodule

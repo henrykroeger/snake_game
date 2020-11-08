@@ -21,7 +21,7 @@ output [127:0] Locations_Flat; // 16 locations
 
 reg [7:0] Food;
 reg [3:0] Length;
-reg [15:0] locations [7:0];
+reg [7:0] locations [15:0];
 
 assign locations_flat = {locations[0], locations[1], locations[2], locations[3],
 						locations[4], locations[5], locations[6], locations[7],
@@ -71,7 +71,7 @@ begin
 	end
 end
 
-always @(posedge Clk, Reset) // asynchronous high-active reset
+always @(posedge Clk, posedge Reset) // asynchronous high-active reset
 begin
 	if (Reset) begin
 		state <= INIT;
@@ -92,7 +92,7 @@ begin
 
 			MOVE: // update the byte array of positions
 			begin
-				for (i = Length - 1; i >= 0; i = i + 1) begin
+				for (i = Length - 1; i >= 0; i = i - 1) begin
 					locations[i + 1] <= locations[i];
 				end
 
