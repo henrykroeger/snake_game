@@ -9,7 +9,7 @@
 module snake_core (Left, Right, Up, Down, Ack, Reset, Clk, Qi, Qm, Qc, Qh, Qe, 
 					Qw, Ql, Qu, Food, Length, Locations);
 
-input [1:0] Next_Dir;
+input Left, Right, Up, Down;
 input Ack, Reset, Clk;
 
 output Qi, Qm, Qc, Qh, Qe, Qw, Ql, Qu;
@@ -21,7 +21,8 @@ reg [7:0] Food;
 reg [3:0] Length;
 reg [15:0] Locations [7:0];
 
-reg [8:0] state;
+reg [7:0] state;
+wire [1:0] next_dir;
 
 // one-hot state machine
 localparam
@@ -36,13 +37,29 @@ localparam
 
 assign {Qu, Ql, Qw, Qe, Qh, Qc, Qm, Qi} = state;
 
-// Next_Dir assignments
+// next_dir assignments
 localparam
 	LEFT = 2'b00,
 	RIGHT = 2'b01,
 	UP = 2'b10,
 	DOWN = 2'b11;
 
+// TODO: I have no idea if this is right...
+always @(posedge Clk, posedge Left, posedge Right, posedge Up, posedge Down)
+begin
+	if (Left) begin
+		next_dir <= LEFT;
+	end
+	else if (Right) begin
+		next_dir <= RIGHT;
+	end
+	else if (Up) begin
+		next_dir <= UP;
+	end
+	else if (Down) begin
+		next_dir <= DOWN;
+	end
+end
 
 always @(posedge Clk, Reset) // asynchronous high-active reset
 begin
@@ -54,8 +71,12 @@ begin
 		case (state)
 			INIT: // when ack is received, start moving
 			begin
+				Locations[0] <= 125;
+				Locations[1] <= 124;
+				next_dir <= RIGHT;
+				Length <= 1;
 				if (Ack) begin
-					state <= MOVE;
+					state <= EAT;
 				end
 			end
 
@@ -65,19 +86,19 @@ begin
 					Locations[i + 1] <= Locations[i];
 				end
 
-				if (Next_Dir == LEFT) begin
+				if (next_dir == LEFT) begin
 					Locations[0] <= Locations[0] - 1;
 				end
 
-				else if (Next_Dir == RIGHT) begin
+				else if (next_dir == RIGHT) begin
 					Locations[0] <= Locations[0] + 1;
 				end
 
-				else if (Next_Dir == UP) begin
+				else if (next_dir == UP) begin
 					Locations[0] <= Locations[0] - 16;
 				end
 
-				else if (Next_Dir == DOWN) begin
+				else if (next_dir == DOWN) begin
 					Locations[0] <= Locations[0] + 16;
 				end
 
