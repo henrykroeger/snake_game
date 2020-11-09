@@ -45,12 +45,22 @@ wire [3:0] length;
 
 wire [127:0] locations_flat;
 
+// DC, SC Outputs
+wire [9:0] vc;
+wire [9:0] hc;
+wire [11:0] rgb;
+wire [11:0] background;
+
+assign vgaR = rgb[11 : 8];
+assign vgaG = rgb[7  : 4];
+assign vgaB = rgb[3  : 0];
+
 // SSD
 reg [7:0] ssd;
 wire [7:0] ssd1, ssd0;
 
 
-assign reset = Sw0;
+assign reset = BtnC;
 
 assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;
 
@@ -71,15 +81,15 @@ assign vga_clk = div_clk[19];
 
 // TODO: Button debouncing
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_1 
-        (.CLK(board_clk), .RESET(Reset), .PB(BtnL), .DPB( ), .SCEN(BtnL_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(reset), .PB(BtnL), .DPB( ), .SCEN(BtnL_SCEN), .MCEN( ), .CCEN( ));
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_2 
-        (.CLK(board_clk), .RESET(Reset), .PB(BtnR), .DPB( ), .SCEN(BtnR_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(reset), .PB(BtnR), .DPB( ), .SCEN(BtnR_SCEN), .MCEN( ), .CCEN( ));
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_3 
-        (.CLK(board_clk), .RESET(Reset), .PB(BtnU), .DPB( ), .SCEN(BtnU_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(reset), .PB(BtnU), .DPB( ), .SCEN(BtnU_SCEN), .MCEN( ), .CCEN( ));
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_4 
-        (.CLK(board_clk), .RESET(Reset), .PB(BtnD), .DPB( ), .SCEN(BtnD_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(reset), .PB(BtnD), .DPB( ), .SCEN(BtnD_SCEN), .MCEN( ), .CCEN( ));
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_5 
-        (.CLK(board_clk), .RESET(Reset), .PB(BtnC), .DPB( ), .SCEN(Start_Ack_SCEN), .MCEN( ), .CCEN( ));
+        (.CLK(board_clk), .RESET(reset), .PB(BtnC), .DPB( ), .SCEN(Start_Ack_SCEN), .MCEN( ), .CCEN( ));
 // Use SCEN in determining next_dir (do this in top or core?)
 
 snake_core snake_core1 (.Left(BtnL_SCEN), .Right(BtnR_SCEN), .Up(BtnU_SCEN), .Down(BtnD_SCEN), .Ack(Start_Ack_SCEN), .Reset(reset), .Clk(game_clk), .Qi(Qi), .Qm(Qm), .Qc(Qc), .Qh(Qh), .Qe(Qe), 

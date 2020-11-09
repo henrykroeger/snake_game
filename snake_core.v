@@ -23,6 +23,8 @@ reg [7:0] Food;
 reg [3:0] Length;
 reg [7:0] locations [15:0];
 
+wire [127:0] Locations_Flat;
+
 assign locations_Flat = {locations[0], locations[1], locations[2], locations[3],
 						locations[4], locations[5], locations[6], locations[7],
 						locations[8], locations[9], locations[10], locations[11],
@@ -100,7 +102,7 @@ begin
 		locations[15] <= 8'b00000000;
 		Length <= 0;
 		Food <= 0;
-		next_dir <= RIGHT;
+		// Testing if this gets rid of multi-driven error: next_dir <= RIGHT;
 	end
 
 	else begin
