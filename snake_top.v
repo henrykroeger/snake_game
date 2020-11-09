@@ -62,6 +62,7 @@ wire [7:0] ssd1, ssd0;
 
 assign reset = BtnC;
 
+// disable memory ports
 assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;
 
 // Clock Division

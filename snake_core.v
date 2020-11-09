@@ -24,8 +24,7 @@ reg [3:0] Length;
 reg [7:0] locations [15:0];
 
 wire [127:0] Locations_Flat;
-
-assign locations_Flat = {locations[0], locations[1], locations[2], locations[3],
+assign Locations_Flat = {locations[0], locations[1], locations[2], locations[3],
 						locations[4], locations[5], locations[6], locations[7],
 						locations[8], locations[9], locations[10], locations[11],
 						locations[12], locations[13], locations[14], locations[15]};
