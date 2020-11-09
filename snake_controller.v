@@ -22,8 +22,8 @@ module snake_controller(
 			locations[12], locations[13], locations[14], locations[15]} = Locations_Flat;
 	
 	//these two values dictate the center of each block of the snake
-	reg [15:0] xpos [9:0]; 
-	reg [15:0] ypos [9:0];
+	reg [9:0] xpos [15:0]; 
+	reg [9:0] ypos [15:0];
 	//these two values dictate the center of the block of food
 	reg [9:0] f_xpos, f_ypos;
 	
@@ -43,7 +43,7 @@ module snake_controller(
 		else if (food_fill)
 			rgb = 12'b1111_1111_1111;
 		else	
-			rgb=background;
+			rgb = background;
 	end
 
 	// Calculate snake positions, top left corner (144, 35)
