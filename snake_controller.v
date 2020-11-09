@@ -55,8 +55,8 @@ module snake_controller(
 			ypos[i] <= (locations[i] / 16)*30 + 35 + 15;
 		end
 	if (Qc) begin
-		f_xpos <= (locations[i] % 16)*30 + 144 + 15;
-		f_ypos <= (locations[i] / 16)*30 + 35 + 15;
+		f_xpos <= (Food % 16)*30 + 144 + 15;
+		f_ypos <= (Food / 16)*30 + 35 + 15;
 	end
 	end
 

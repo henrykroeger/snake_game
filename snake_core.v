@@ -30,7 +30,6 @@ assign locations_Flat = {locations[0], locations[1], locations[2], locations[3],
 
 reg [7:0] state;
 reg [1:0] next_dir;
-wire [1:0] dir;
 
 integer i, j;
 
@@ -82,6 +81,26 @@ always @(posedge Clk, posedge Reset) // asynchronous high-active reset
 begin
 	if (Reset) begin
 		state <= INIT;
+		// Send locations into known initial state
+		locations[0] <= 8'b00000000;
+		locations[1] <= 8'b00000000;
+		locations[2] <= 8'b00000000;
+		locations[3] <= 8'b00000000;
+		locations[4] <= 8'b00000000;
+		locations[5] <= 8'b00000000;
+		locations[6] <= 8'b00000000;
+		locations[7] <= 8'b00000000;
+		locations[8] <= 8'b00000000;
+		locations[9] <= 8'b00000000;
+		locations[10] <= 8'b00000000;
+		locations[11] <= 8'b00000000;
+		locations[12] <= 8'b00000000;
+		locations[13] <= 8'b00000000;
+		locations[14] <= 8'b00000000;
+		locations[15] <= 8'b00000000;
+		Length <= 0;
+		Food <= 0;
+		next_dir <= RIGHT;
 	end
 
 	else begin
@@ -90,24 +109,9 @@ begin
 			begin
 				locations[0] <= 125;
 				locations[1] <= 124;
-				// Send rest of locations into known initial state
-				locations[2] <= 8'b00000000;
-				locations[3] <= 8'b00000000;
-				locations[4] <= 8'b00000000;
-				locations[5] <= 8'b00000000;
-				locations[6] <= 8'b00000000;
-				locations[7] <= 8'b00000000;
-				locations[8] <= 8'b00000000;
-				locations[9] <= 8'b00000000;
-				locations[10] <= 8'b00000000;
-				locations[11] <= 8'b00000000;
-				locations[12] <= 8'b00000000;
-				locations[13] <= 8'b00000000;
-				locations[14] <= 8'b00000000;
-				locations[15] <= 8'b00000000;
 				
-				next_dir <= RIGHT;
 				Length <= 1;
+				Food <= rand_loc;
 				if (Ack) begin
 					state <= EAT;
 				end
