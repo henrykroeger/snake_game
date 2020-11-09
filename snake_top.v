@@ -26,7 +26,7 @@ output 	MemOE, MemWR, RamCS, QuadSpiFlashCS;
 output Ld7, Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0;
 output Dp, Cg, Cf, Ce, Cd, Cc, Cb, Ca;
 output An7, An6, An5, An4, An3, An2, An1, An0;
-// TODO: VGA OUTPUT & VGA CLOCK TIMING
+
 output hSync, vSync;
 output [3:0] vgaR, vgaG, vgaB;
 
@@ -57,10 +57,12 @@ assign vgaB = rgb[3  : 0];
 
 // SSD
 reg [7:0] ssd;
-wire [7:0] ssd1, ssd0;
+wire ssd1;
+wire [3:0] ssd0;
+reg [7:0] ssd_cathodes;
 
 
-assign reset = BtnC;
+assign reset = Sw0;
 
 // disable memory ports
 assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;
@@ -107,26 +109,8 @@ assign {Ld3, Ld2, Ld1, Ld0} = {Qe, Qw, Ql, Qu};
 // TODO: SSDs
 assign ssd_clk = div_clk[18];
 
-assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp} = {ssd};
-
-/*integer conv;
-always @( length )
-begin
-	conv = length;
-	ssd1 = (conv >= 10) ? 8'b10011111 : 8'b11111111;
-	case (conv % 10)
-		0: ssd0 = 8'b00000010; // 0
-		1: ssd0 = 8'b10011110; // 1
-		2: ssd0 = 8'b00100100; // 2
-		3: ssd0 = 8'b00001100; // 3
-		4: ssd0 = 8'b10011000; // 4
-		5: ssd0 = 8'b01001000; // 5
-		6: ssd0 = 8'b01000000; // 6
-		7: ssd0 = 8'b00011110; // 7
-		8: ssd0 = 8'b00000000; // 8
-		9: ssd0 = 8'b00001000; // 9
-		endcase
-end
+assign ssd1 = (length >= 10) ? 1'b1 : 1'b0;
+assign ssd0 = (length % 10);
 
 assign An7 = 1'b1;
 assign An6 = 1'b1;
@@ -140,8 +124,28 @@ assign An0 = ssd_clk;
 always @ (ssd_clk, ssd1, ssd0)
 begin
 	case (ssd_clk) 
-		1'b1: ssd = ssd1;
-		1'b0: ssd = ssd0;
+		1'b1: ssd = {4'b0000, ssd1};
+		1'b0: ssd = {7'b0000000, ssd0};
 	endcase 
-end*/
+end
+
+assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp} = {ssd_cathodes};
+
+always @( ssd )
+begin
+	case (ssd)
+		8'd0: ssd_cathodes = 8'b00000010; // 0
+		8'd1: ssd_cathodes = 8'b10011110; // 1
+		8'd2: ssd_cathodes = 8'b00100100; // 2
+		8'd3: ssd_cathodes = 8'b00001100; // 3
+		8'd4: ssd_cathodes = 8'b10011000; // 4
+		8'd5: ssd_cathodes = 8'b01001000; // 5
+		8'd6: ssd_cathodes = 8'b01000000; // 6
+		8'd7: ssd_cathodes = 8'b00011110; // 7
+		8'd8: ssd_cathodes = 8'b00000000; // 8
+		8'd9: ssd_cathodes = 8'b00001000; // 9
+		endcase
+end
+
+
 endmodule
