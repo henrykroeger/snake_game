@@ -91,11 +91,11 @@ ee201_debouncer #(.N_dc(25)) ee201_debouncer_3
         (.CLK(board_clk), .RESET(reset), .PB(BtnU), .DPB( ), .SCEN(BtnU_SCEN), .MCEN( ), .CCEN( ));
 ee201_debouncer #(.N_dc(25)) ee201_debouncer_4 
         (.CLK(board_clk), .RESET(reset), .PB(BtnD), .DPB( ), .SCEN(BtnD_SCEN), .MCEN( ), .CCEN( ));
-ee201_debouncer #(.N_dc(25)) ee201_debouncer_5 
-        (.CLK(board_clk), .RESET(reset), .PB(BtnC), .DPB( ), .SCEN(Start_Ack_SCEN), .MCEN( ), .CCEN( ));
+//ee201_debouncer #(.N_dc(25)) ee201_debouncer_5 
+        //(.CLK(board_clk), .RESET(reset), .PB(BtnC), .DPB( ), .SCEN(Start_Ack_SCEN), .MCEN( ), .CCEN( ));
 // Use SCEN in determining next_dir (do this in top or core?)
 
-snake_core snake_core1 (.Left(BtnL_SCEN), .Right(BtnR_SCEN), .Up(BtnU_SCEN), .Down(BtnD_SCEN), .Ack(Start_Ack_SCEN), .Reset(reset), .Clk(game_clk), .Qi(Qi), .Qm(Qm), .Qc(Qc), .Qh(Qh), .Qe(Qe), 
+snake_core snake_core1 (.Left(BtnL_SCEN), .Right(BtnR_SCEN), .Up(BtnU_SCEN), .Down(BtnD_SCEN), .Ack(BtnC), .Reset(reset), .Clk(game_clk), .Qi(Qi), .Qm(Qm), .Qc(Qc), .Qh(Qh), .Qe(Qe), 
 					.Qw(Qw), .Ql(Ql), .Qu(Qu), .Food(food), .Length(length), .Locations_Flat(locations_flat));
 
 display_controller dc(.clk(board_clk), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
