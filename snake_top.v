@@ -95,7 +95,7 @@ assign vga_clk = div_clk[19];
         //(.CLK(board_clk), .RESET(reset), .PB(BtnC), .DPB( ), .SCEN(Start_Ack_SCEN), .MCEN( ), .CCEN( ));
 // Use SCEN in determining next_dir (do this in top or core?)
 
-snake_core snake_core1 (.Left(BtnL_SCEN), .Right(BtnR_SCEN), .Up(BtnU_SCEN), .Down(BtnD_SCEN), .Ack(BtnC), .Reset(reset), .Clk(game_clk), .Qi(Qi), .Qm(Qm), .Qc(Qc), .Qh(Qh), .Qe(Qe), 
+snake_core snake_core1 (.Left(BtnL), .Right(BtnR), .Up(BtnU), .Down(BtnD), .Ack(BtnC), .Reset(reset), .Clk(game_clk), .Qi(Qi), .Qm(Qm), .Qc(Qc), .Qh(Qh), .Qe(Qe), 
 					.Qw(Qw), .Ql(Ql), .Qu(Qu), .Food(food), .Length(length), .Locations_Flat(locations_flat));
 
 display_controller dc(.clk(board_clk), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));

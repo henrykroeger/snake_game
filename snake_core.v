@@ -55,19 +55,19 @@ localparam
 	DOWN = 2'b11;
 
 // TODO: I have no idea if this is right...
-always @(posedge Left, posedge Right, posedge Up, posedge Down)
+always @(Left, Right, Up, Down)
 begin
 	if (Left) begin
-		next_dir <= LEFT;
+		next_dir = LEFT;
 	end
 	else if (Right) begin
-		next_dir <= RIGHT;
+		next_dir = RIGHT;
 	end
 	else if (Up) begin
-		next_dir <= UP;
+		next_dir = UP;
 	end
 	else if (Down) begin
-		next_dir <= DOWN;
+		next_dir = DOWN;
 	end
 end
 
