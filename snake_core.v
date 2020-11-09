@@ -112,7 +112,7 @@ begin
 				locations[1] <= 124;
 				
 				Length <= 1;
-				Food <= rand_loc;
+				//Food <= rand_loc;
 				if (Ack) begin
 					state <= EAT;
 				end
@@ -157,7 +157,7 @@ begin
 				else begin
 					state <= HOLD;
 					for (i = 0; i < Length; i = i + 1) begin
-						for (j = i; j < Length; j = j + 1) begin
+						for (j = i + 1; j < Length; j = j + 1) begin
 							if (locations[i] == locations[j]) begin
 								state <= LOSE;
 							end
