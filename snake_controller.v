@@ -14,7 +14,7 @@ module snake_controller(
    );
 	wire snake_fill;
 	wire food_fill;
-	wire [15:0] locations [7:0];
+	wire [7:0] locations [15:0];
 
 	assign {locations[0], locations[1], locations[2], locations[3],
 			locations[4], locations[5], locations[6], locations[7],
