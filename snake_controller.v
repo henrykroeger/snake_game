@@ -4,7 +4,7 @@ module snake_controller(
 	input Clk, //this clock must be a slow enough clock to view the changing positions of the objects
 	input Bright,
 	input Reset,
-	input Qw, Ql, Qc,
+	input Qi, Qw, Ql, Qc,
 	input [9:0] hCount, vCount,
 	input [7:0] Food,
 	input [3:0] Length,
@@ -91,7 +91,7 @@ module snake_controller(
 	
 	//the background color reflects the state of the game
 	always@(posedge Clk, posedge Reset) begin
-		if(Reset)
+		if(Qi)
 			background <= 12'b0000_0000_0000;
 		else 
 			if(Ql) // Turn red if lose
