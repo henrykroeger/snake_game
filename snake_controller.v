@@ -49,7 +49,7 @@ module snake_controller(
 	// Calculate snake positions, top left corner (144, 35)
 	integer i;
 	always@ (posedge Clk) begin
-	for (i = 0; i < Length; i = i + 1)
+	for (i = 0; i < 16; i = i + 1)
 		begin
 			xpos[i] <= (locations[i] % 16)*30 + 144 + 15;
 			ypos[i] <= (locations[i] / 16)*30 + 35 + 15;
