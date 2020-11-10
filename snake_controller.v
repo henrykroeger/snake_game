@@ -91,8 +91,14 @@ module snake_controller(
 	
 	//the background color reflects the state of the game
 	always@(posedge Clk, posedge Reset) begin
-		if(Qi)
+		if(Reset || Qi) begin
 			background <= 12'b0000_0000_0000;
+			for (i = 2; i < 16; i = i + 1)
+                begin
+                     xpos[i] <= 10'bXXXXXXXXXX;
+                     ypos[i] <= 10'bXXXXXXXXXX;
+                end
+			end
 		else 
 			if(Ql) // Turn red if lose
 				background <= 12'b1111_0000_0000;
