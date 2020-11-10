@@ -55,7 +55,7 @@ localparam
 	DOWN = 2'b11;
 
 // TODO: I have no idea if this is right...
-always @(Left, Right, Up, Down)
+/*always @(Left, Right, Up, Down)
 begin
 	if (Left) begin
 		next_dir = LEFT;
@@ -68,6 +68,22 @@ begin
 	end
 	else if (Down) begin
 		next_dir = DOWN;
+	end
+end*/
+
+always @(posedge Clk)
+begin
+	if (Left) begin
+		next_dir <= LEFT;
+	end
+	else if (Right) begin
+		next_dir <= RIGHT;
+	end
+	else if (Up) begin
+		next_dir <= UP;
+	end
+	else if (Down) begin
+		next_dir <= DOWN;
 	end
 end
 
@@ -101,7 +117,6 @@ begin
 		locations[15] <= 8'b00000000;
 		Length <= 0;
 		Food <= 0;
-		// Testing if this gets rid of multi-driven error: next_dir <= RIGHT;
 	end
 
 	else begin
@@ -110,9 +125,23 @@ begin
 			begin
 				locations[0] <= 125;
 				locations[1] <= 124;
+				// So that snake resets on ACK
+				locations[2] <= 8'b00000000;
+				locations[3] <= 8'b00000000;
+				locations[4] <= 8'b00000000;
+				locations[5] <= 8'b00000000;
+				locations[6] <= 8'b00000000;
+				locations[7] <= 8'b00000000;
+				locations[8] <= 8'b00000000;
+				locations[9] <= 8'b00000000;
+				locations[10] <= 8'b00000000;
+				locations[11] <= 8'b00000000;
+				locations[12] <= 8'b00000000;
+				locations[13] <= 8'b00000000;
+				locations[14] <= 8'b00000000;
+				locations[15] <= 8'b00000000;
 				
 				Length <= 1;
-				//Food <= rand_loc;
 				if (Ack) begin
 					state <= EAT;
 				end
