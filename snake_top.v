@@ -100,7 +100,7 @@ snake_core snake_core1 (.Left(BtnL), .Right(BtnR), .Up(BtnU), .Down(BtnD), .Ack(
 					.Qw(Qw), .Ql(Ql), .Qu(Qu), .Food(food), .Length(length), .Locations_Flat(locations_flat));
 
 display_controller dc(.clk(board_clk), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-snake_controller sc(.Clk(vga_clk), .Bright(bright), .Reset(BtnC), .Qw(Qw), .Ql(Ql), .Qc(Qc), .hCount(hc), .vCount(vc), .Food(food), .Length(length), .Locations_Flat(locations_flat), .rgb(rgb), .background(background));
+snake_controller sc(.Clk(vga_clk), .Bright(bright), .Reset(BtnC), .Qi(Qi), .Qw(Qw), .Ql(Ql), .Qc(Qc), .hCount(hc), .vCount(vc), .Food(food), .Length(length), .Locations_Flat(locations_flat), .rgb(rgb), .background(background));
 	
 
 // TODO: LED asignments
