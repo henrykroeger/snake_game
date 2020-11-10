@@ -95,8 +95,8 @@ module snake_controller(
 			background <= 12'b0000_0000_0000;
 			for (i = 2; i < 16; i = i + 1)
                 begin
-                     xpos[i] <= 10'bXXXXXXXXXX;
-                     ypos[i] <= 10'bXXXXXXXXXX;
+                     xpos[i] <= 10'b0000000000;
+                     ypos[i] <= 10'b0000000000;
                 end
 			end
 		else 
