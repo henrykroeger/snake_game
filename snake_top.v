@@ -79,7 +79,7 @@ begin
 	end
 end
 
-assign game_clk = div_clk[26]; // TODO: Check this timing!
+assign game_clk = div_clk[24]; // TODO: Check this timing!
 assign vga_clk = div_clk[19];
 
 // TODO: Button debouncing
