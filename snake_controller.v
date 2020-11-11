@@ -51,11 +51,11 @@ module snake_controller(
 	always@ (posedge Clk) begin
 	for (i = 0; i < Length; i = i + 1)
 		begin
-			xpos[i] <= (locations[i] % 16)*30 + 144 + 15;
+			xpos[i] <= (locations[i] % 16)*30 + 144 + 15 + 80;
 			ypos[i] <= (locations[i] / 16)*30 + 35 + 15;
 		end
 	if (Qc) begin
-		f_xpos <= (Food % 16)*30 + 144 + 15;
+		f_xpos <= (Food % 16)*30 + 144 + 15 + 80;
 		f_ypos <= (Food / 16)*30 + 35 + 15;
 	end
 	end
