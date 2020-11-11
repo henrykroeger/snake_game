@@ -54,23 +54,6 @@ localparam
 	UP = 2'b10,
 	DOWN = 2'b11;
 
-// TODO: I have no idea if this is right...
-/*always @(Left, Right, Up, Down)
-begin
-	if (Left) begin
-		next_dir = LEFT;
-	end
-	else if (Right) begin
-		next_dir = RIGHT;
-	end
-	else if (Up) begin
-		next_dir = UP;
-	end
-	else if (Down) begin
-		next_dir = DOWN;
-	end
-end*/
-
 always @(posedge Clk)
 begin
 	if (Left) begin
@@ -181,7 +164,7 @@ begin
 					state <= EAT;
 				end
 
-				// TODO: Check edges?
+				
 
 				else begin
 					state <= HOLD;
@@ -195,12 +178,11 @@ begin
 				end
 			end
 
-			EAT: // grow bigger - weird implementation, may not work
+			EAT: 
 			begin
 				state <= MOVE;
 				Length <= Length + 1;
 				Food <= rand_loc;
-				// potential bug...food could generate under snake
 				if (Length == 15) begin
 					state <= WIN;
 				end

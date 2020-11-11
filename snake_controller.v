@@ -93,11 +93,7 @@ module snake_controller(
 	always@(posedge Clk, posedge Reset) begin
 		if(Reset || Qi) begin
 			background <= 12'b0000_0000_0000;
-			/*for (i = 2; i < 16; i = i + 1)
-                begin
-                     xpos[i] <= 10'b0000000000;
-                     ypos[i] <= 10'b0000000000;
-                end*/
+			
 			end
 		else 
 			if(Ql) // Turn red if lose

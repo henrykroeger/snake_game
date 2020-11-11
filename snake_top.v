@@ -79,22 +79,10 @@ begin
 	end
 end
 
-assign game_clk = div_clk[22]; // TODO: Check this timing!
+assign game_clk = div_clk[22]; 
 assign vga_clk = div_clk[19];
 
-// TODO: Button debouncing
-/*ee201_debouncer #(.N_dc(25)) ee201_debouncer_1 
-        (.CLK(game_clk), .RESET(reset), .PB(BtnL), .DPB( ), .SCEN(BtnL_SCEN), .MCEN( ), .CCEN( ));
-ee201_debouncer #(.N_dc(25)) ee201_debouncer_2 
-        (.CLK(game_clk), .RESET(reset), .PB(BtnR), .DPB( ), .SCEN(BtnR_SCEN), .MCEN( ), .CCEN( ));
-ee201_debouncer #(.N_dc(25)) ee201_debouncer_3 
-        (.CLK(game_clk), .RESET(reset), .PB(BtnU), .DPB( ), .SCEN(BtnU_SCEN), .MCEN( ), .CCEN( ));
-ee201_debouncer #(.N_dc(25)) ee201_debouncer_4 
-        (.CLK(game_clk), .RESET(reset), .PB(BtnD), .DPB( ), .SCEN(BtnD_SCEN), .MCEN( ), .CCEN( ));
-ee201_debouncer #(.N_dc(25)) ee201_debouncer_5 
-        (.CLK(game_clk), .RESET(reset), .PB(BtnC), .DPB( ), .SCEN(Start_Ack_SCEN), .MCEN( ), .CCEN( ));
-*/
-// Use SCEN in determining next_dir (do this in top or core?)
+
 
 snake_core snake_core1 (.Left(BtnL), .Right(BtnR), .Up(BtnU), .Down(BtnD), .Ack(BtnC), .Reset(reset), .Clk(game_clk), .Qi(Qi), .Qm(Qm), .Qc(Qc), .Qh(Qh), .Qe(Qe), 
 					.Qw(Qw), .Ql(Ql), .Qu(Qu), .Food(food), .Length(length), .Locations_Flat(locations_flat));
