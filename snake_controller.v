@@ -1,7 +1,16 @@
+/*
+ * snake_controller.v
+ * 
+ * Henry Kroeger & Sarah Chow
+ * EE 364 Final Project
+ * 
+ * Determines VGA colors for the snake game.
+ */
+
 `timescale 1ns / 1ps
 
 module snake_controller(
-	input Clk, //this clock must be a slow enough clock to view the changing positions of the objects
+	input Clk,
 	input Bright,
 	input Reset,
 	input Qi, Qw, Ql, Qc,
@@ -16,6 +25,7 @@ module snake_controller(
 	wire food_fill;
 	wire [7:0] locations [15:0];
 	
+	// see snake_top for an explanation of this
 	assign {locations[0], locations[1], locations[2], locations[3],
 			locations[4], locations[5], locations[6], locations[7],
 			locations[8], locations[9], locations[10], locations[11],
@@ -29,24 +39,27 @@ module snake_controller(
 	
 	parameter RED   = 12'b1111_0000_0000;
 	parameter YELLOW = 12'b1111_1111_0000;
+	parameter WHITE = 12'b1111_1111_1111;
+	parameter BLACK = 12'b0000_0000_0000;
+	parameter GREEN = 12'b0000_1111_0000;
 	
 	/*when outputting the rgb value in an always block like this, make sure to include the if(~bright) statement, as this ensures the monitor 
 	will output some data to every pixel and not just the images you are trying to display*/
 	always@ (*) begin
     	if(~Bright )	//force black if not inside the display area
-			rgb = 12'b0000_0000_0000;
+			rgb = BLACK;
 		else if (snake_fill0 || snake_fill1 || snake_fill2 || snake_fill3 
 				|| snake_fill4 || snake_fill5 || snake_fill6 || snake_fill7 
 				|| snake_fill8 || snake_fill9 || snake_fill10 || snake_fill11 
 				|| snake_fill12 || snake_fill13 || snake_fill14 || snake_fill15) 
 			rgb = YELLOW; 
 		else if (food_fill)
-			rgb = 12'b1111_1111_1111;
+			rgb = WHITE;
 		else	
 			rgb = background;
 	end
 
-	// Calculate snake positions, top left corner (144, 35)
+	// Calculate snake and food positions, top left corner (144, 35)
 	integer i;
 	always@ (posedge Clk) begin
 	for (i = 0; i < Length; i = i + 1)
@@ -92,16 +105,16 @@ module snake_controller(
 	//the background color reflects the state of the game
 	always@(posedge Clk, posedge Reset) begin
 		if(Reset || Qi) begin
-			background <= 12'b0000_0000_0000;
+			background <= BLACK;
 			
 			end
 		else 
 			if(Ql) // Turn red if lose
-				background <= 12'b1111_0000_0000;
+				background <= RED;
 			else if(Qw) // Turn green if win
-				background <= 12'b0000_1111_0000;
+				background <= GREEN;
 			else
-				background <= 12'b0000_0000_0000;
+				background <= BLACK;
 	end
 
 	

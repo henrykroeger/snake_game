@@ -2,32 +2,10 @@
 Henry Kroeger & Sarah Chow
 EE 364 Final Project
 
-#### Assumptions / Notes
-16x16 gameboard, represented as 256 individual squares
+### Overview
+Snake is a remake of the classic snake video game for the Nexys 4 family of FPGAs. It is written entirely in Verilog. The game is controlled by the on-board buttons and switches and the game state is shown on an attached monitor by the FPGA's VGA output.
 
-every location is a byte / [7:0]
+### To Play
+Either clone the repo and generate a bitstream using Vivado/other appropriate software or download the pre-generated bitstream and upload it to your FPGA.
 
-win after getting 15 bites
-
-lose if you eat yourself
-
-havent figured out the edges of the board (do we wrap or do we lose?)
-
-
-to get the actual value on the grid
-
-row = loc / 16
-
-col = loc % 16
-
-^this is c code, dont know if it works in verilog
-
-
-7 states + a default/unknown
-
-
-board outputted on vga monitor
-
-ssd to display length of snake
-
-leds to display state
+The directional buttons make the snake move in that direction. The center button serves as an ACK signal to start the game after a win or loss. Switch 0 acts as a reset. The objective of the game is to eat 16 pieces of food without having the snake run into itself. The current length of the snake is shown on the on-board SSDs.

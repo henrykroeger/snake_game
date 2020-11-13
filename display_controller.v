@@ -1,3 +1,12 @@
+/*
+ * display_controller.v
+ * 
+ * Henry Kroeger & Sarah Chow
+ * EE 364 Final Project
+ * 
+ * VGA output control for the snake game.
+ */
+
 `timescale 1ns / 1ps
 
 module display_controller(

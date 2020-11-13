@@ -4,7 +4,7 @@
  * Henry Kroeger & Sarah Chow
  * EE 364 Final Project
  * 
- * Core state machine for the snake game.
+ * Top control for the snake game.
  */
 
 module snake_top (MemOE, MemWR, RamCS, QuadSpiFlashCS,
@@ -42,7 +42,8 @@ wire Qi, Qm, Qc, Qh, Qe, Qw, Ql, Qu;
 wire [7:0] food;
 wire [3:0] length;
 
-
+// cannot input/output byte arrays in Verilog (without SystemVerilog). instead, we pack the byte array into a 128-bit
+// wire and i/o this wire
 wire [127:0] locations_flat;
 
 // DC, SC Outputs
@@ -91,11 +92,10 @@ display_controller dc(.clk(board_clk), .hSync(hSync), .vSync(vSync), .bright(bri
 snake_controller sc(.Clk(vga_clk), .Bright(bright), .Reset(BtnC), .Qi(Qi), .Qw(Qw), .Ql(Ql), .Qc(Qc), .hCount(hc), .vCount(vc), .Food(food), .Length(length), .Locations_Flat(locations_flat), .rgb(rgb), .background(background));
 	
 
-// TODO: LED asignments
 assign {Ld7, Ld6, Ld5, Ld4} = {Qi, Qm, Qc, Qh};
 assign {Ld3, Ld2, Ld1, Ld0} = {Qe, Qw, Ql, Qu};
 
-// TODO: SSDs
+
 assign ssd_clk = div_clk[18];
 
 assign ssd1 = (length >= 10) ? 1'b1 : 1'b0;
